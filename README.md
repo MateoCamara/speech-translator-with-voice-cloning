@@ -1,224 +1,166 @@
 <div align="center">
   <div>&nbsp;</div>
-  <img src="logo.png" width="600"/> 
+  <img src="tecnopapagayo.png" width="600"/> 
 </div>
 
-# Speech To Speech: an effort for an open-sourced and modular GPT4-o
-
-
-## 📖 Quick Index
-* [Approach](#approach)
-  - [Structure](#structure)
-  - [Modularity](#modularity)
-* [Setup](#setup)
-* [Usage](#usage)
-  - [Docker Server approach](#docker-server)
-  - [Server/Client approach](#serverclient-approach)
-  - [Local approach](#local-approach-running-on-mac)
-* [Command-line usage](#command-line-usage)
-  - [Model parameters](#model-parameters)
-  - [Generation parameters](#generation-parameters)
-  - [Notable parameters](#notable-parameters)
+# Real-Time Speech Translator with Voice Cloning: An Open-Source Modular System for Multilingual Communication
 
 ## Approach
 
 ### Structure
-This repository implements a speech-to-speech cascaded pipeline consisting of the following parts:
+The system architecture follows a modular and scalable approach, designed for real-time speech translation with voice cloning. It consists of a series of independent components that work together in a pipeline to ensure accurate translation and natural voice synthesis.
+
 1. **Voice Activity Detection (VAD)**
 2. **Speech to Text (STT)**
-3. **Language Model (LM)**
-4. **Text to Speech (TTS)**
+3. **Language Model (LM) for sentence completion**
+4. **Language Model (LM) for translation**
+5. **Text to Speech (TTS) with voice clonation**
 
 ### Modularity
-The pipeline provides a fully open and modular approach, with a focus on leveraging models available through the Transformers library on the Hugging Face hub. The code is designed for easy modification, and we already support device-specific and external library implementations:
 
 **VAD** 
-- [Silero VAD v5](https://github.com/snakers4/silero-vad)
+- [Silero VAD v5](https://github.com/snakers4/silero-vad). Utilizes Silero VAD to efficiently detect voice intervals in the audio signal. This module reduces unnecessary computational resource usage by activating the Speech-to-Text (STT) system only when voice is detected. VAD helps reduce latency and prevents false activations.
 
 **STT**
-- Any [Whisper](https://huggingface.co/docs/transformers/en/model_doc/whisper) model checkpoint on the Hugging Face Hub through Transformers 🤗, including [whisper-large-v3](https://huggingface.co/openai/whisper-large-v3) and [distil-large-v3](https://huggingface.co/distil-whisper/distil-large-v3)
-- [Lightning Whisper MLX](https://github.com/mustafaaljadery/lightning-whisper-mlx?tab=readme-ov-file#lightning-whisper-mlx)
-- [Paraformer - FunASR](https://github.com/modelscope/FunASR)
+- [Whisper](https://huggingface.co/docs/transformers/en/model_doc/whisper). Implemented with Whisper, a robust multilingual model for voice transcription. Whisper converts the audio signal into text with high accuracy, handling different accents and noise levels. This module is critical to maintaining content integrity throughout the translation pipeline.
 
 **LLM**
-- Any instruction-following model on the [Hugging Face Hub](https://huggingface.co/models?pipeline_tag=text-generation&sort=trending) via Transformers 🤗
-- [mlx-lm](https://github.com/ml-explore/mlx-examples/blob/main/llms/README.md)
-- [OpenAI API](https://platform.openai.com/docs/quickstart)
+- Two [LLaMA 3.3-70B](https://huggingface.co/meta-llama/Llama-3.3-70B-Instruct) models are used in the pipeline. The first LLM acts as a contextual buffer, correcting STT errors and ensuring that phrases are complete before translation. The second LLM is dedicated exclusively to translation, ensuring that the original message remains faithful in the target language.
 
 **TTS**
-- [Parler-TTS](https://github.com/huggingface/parler-tts) 🤗
-- [MeloTTS](https://github.com/myshell-ai/MeloTTS)
-- [ChatTTS](https://github.com/2noise/ChatTTS?tab=readme-ov-file)
+- [MeloTTS](https://github.com/myshell-ai/MeloTTS). Uses MeloTTS to generate natural voice synthesis that mimics the original speaker's vocal identity. This module enables the playback of the translated voice in a consistent and natural manner, providing an immersive experience when using the system.
 
 ## Setup
 
 Clone the repository:
-```bash
-git clone https://github.com/huggingface/speech-to-speech.git
-cd speech-to-speech
+
+```
+git clone <repository_url>
+cd <repository_name>
 ```
 
-Install the required dependencies using [uv](https://github.com/astral-sh/uv):
-```bash
-uv pip install -r requirements.txt
+Create a conda environment and install requirements:
+
+```
+conda create -n real_time_speech python=3.10
+conda activate real_time_speech
+pip install -r requirements.txt
 ```
 
-For Mac users, use the `requirements_mac.txt` file instead:
-```bash
-uv pip install -r requirements_mac.txt
-```
+Install MeloTTS
 
-If you want to use Melo TTS, you also need to run:
-```bash
-python -m unidic download
-```
-
+Follow the installation instructions provided in the MeloTTS repository. Ensure MeloTTS is installed within the same conda environment to maintain compatibility.
 
 ## Usage
 
-The pipeline can be run in two ways:
-- **Server/Client approach**: Models run on a server, and audio input/output are streamed from a client.
-- **Local approach**: Runs locally.
+### Recommended setup
 
-### Recommanded setup 
+To run the system, simply execute the following command:
 
-### Server/Client Approach
-
-1. Run the pipeline on the server:
-   ```bash
-   python s2s_pipeline.py --recv_host 0.0.0.0 --send_host 0.0.0.0
-   ```
-
-2. Run the client locally to handle microphone input and receive generated audio:
-   ```bash
-   python listen_and_play.py --host <IP address of your server>
-   ```
-
-### Local Approach (Mac)
-
-1. For optimal settings on Mac:
-   ```bash
-   python s2s_pipeline.py --local_mac_optimal_settings
-   ```
-
-This setting:
-   - Adds `--device mps` to use MPS for all models.
-     - Sets LightningWhisperMLX for STT
-     - Sets MLX LM for language model
-     - Sets MeloTTS for TTS
-
-### Docker Server
-
-#### Install the NVIDIA Container Toolkit
-
-https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html
-
-#### Start the docker container
-```docker compose up```
-
-
-
-### Recommended usage with Cuda
-
-Leverage Torch Compile for Whisper and Parler-TTS. **The usage of Parler-TTS allows for audio output streaming, futher reducing the overeall latency** 🚀:
-
-```bash
-python s2s_pipeline.py \
-	--lm_model_name microsoft/Phi-3-mini-4k-instruct \
-	--stt_compile_mode reduce-overhead \
-	--tts_compile_mode default \
-  --recv_host 0.0.0.0 \
-	--send_host 0.0.0.0 
+```
+python s2s_pipeline.py
 ```
 
-For the moment, modes capturing CUDA Graphs are not compatible with streaming Parler-TTS (`reduce-overhead`, `max-autotune`).
+By default, the system uses the microphone as the audio input. However, you can configure it to process audio files instead. This is particularly useful for integrating with Zoom sessions or other pre-recorded audio scenarios. Additionally, configuration parameters allow you to modify the system's behavior, offering flexibility for different use cases. The detailed description in the documentation explains how to adjust these settings.
 
-### Multi-language Support
+When the system is ready, it will display the message 'Ready!' (takes around 20 seconds). At this point, anything spoken into the microphone in English will be translated into Spanish and played back using a generic voice.
 
-The pipeline currently supports English, French, Spanish, Chinese, Japanese, and Korean.  
-Two use cases are considered:
+To clone your voice, follow the instructions provided in the section below.
 
-- **Single-language conversation**: Enforce the language setting using the `--language` flag, specifying the target language code (default is 'en').
-- **Language switching**: Set `--language` to 'auto'. In this case, Whisper detects the language for each spoken prompt, and the LLM is prompted with "`Please reply to my message in ...`" to ensure the response is in the detected language.
+### Attribute description (config.json)
 
-Please note that you must use STT and LLM checkpoints compatible with the target language(s). For the STT part, Parler-TTS is not yet multilingual (though that feature is coming soon! 🤗). In the meantime, you should use Melo (which supports English, French, Spanish, Chinese, Japanese, and Korean) or Chat-TTS.
+---
 
-#### With the server version:
+**Module**  
+- **log_level:** Sets the logging level (e.g., info, debug) for system messages.  
+- **mode:** Specifies the operation mode; "local" indicates that the module runs on a local environment.
 
-For automatic language detection:
+---
 
-```bash
-python s2s_pipeline.py \
-    --stt_model_name large-v3 \
-    --language auto \
-    --mlx_lm_model_name mlx-community/Meta-Llama-3.1-8B-Instruct \
-```
+**VAD Handler**  
+- **thresh:** The threshold for voice activity detection.  
+- **sample_rate:** The audio sampling rate in Hertz.  
+- **min_silence_ms:** The minimum duration (in milliseconds) of silence required to consider a break between speech segments.  
+- **min_speech_ms:** The minimum duration (in milliseconds) for an audio segment to be recognized as valid speech.  
+- **max_speech_ms:** The maximum allowed duration (in milliseconds) for a single speech segment.  
+- **speech_pad_ms:** The padding (in milliseconds) added before and after detected speech segments.
 
-Or for one language in particular, chinese in this example
+---
 
-```bash
-python s2s_pipeline.py \
-    --stt_model_name large-v3 \
-    --language zh \
-    --mlx_lm_model_name mlx-community/Meta-Llama-3.1-8B-Instruct \
-```
+**Whisper STT Handler**  
+- **model_name:** The name of the Whisper model used for speech-to-text transcription.  
+- **device:** The hardware device used for model execution (e.g., cuda for GPU acceleration).  
+- **torch_dtype:** The data type used in PyTorch (e.g., float16).  
+- **gen_max_new_tokens:** The maximum number of tokens that can be generated during transcription.  
+- **gen_num_beams:** The number of beams used in beam search during the generation process.  
+- **gen_return_timestamps:** Indicates whether timestamps should be returned with the transcription.  
+- **gen_task:** The task for the model (e.g., "transcribe").  
+- **language:** The target language for transcription (e.g., English).
 
-#### Local Mac Setup
+---
 
-For automatic language detection:
+**Language Model Handler**  
+- **model_name:** The name of the language model used for translation or text generation.  
+- **device:** The hardware device for running the model (e.g., cuda).  
+- **torch_dtype:** The data type setting for PyTorch computations (e.g., float16).  
+- **user_role:** Describes the role of the user in the conversation (in English).  
+- **init_chat_role:** The initial role assigned to the chat agent (e.g., translator in Spanish).  
+- **init_chat_prompt:** The prompt that sets up the chat behavior, instructing the assistant to translate exactly what the user says from English to Spanish, with no additional commentary.  
+- **gen_max_new_tokens:** The maximum number of tokens to generate in a response.  
+- **gen_min_new_tokens:** The minimum number of tokens required for the generated response.  
+- **gen_temperature:** Controls randomness in generation; a lower value makes the output more deterministic.  
+- **gen_do_sample:** A flag that indicates if sampling should be used during generation.  
+- **chat_size:** The number of previous messages retained in the conversation context.
 
-```bash
-python s2s_pipeline.py \
-    --local_mac_optimal_settings \
-    --device mps \
-    --stt_model_name large-v3 \
-    --language auto \
-    --mlx_lm_model_name mlx-community/Meta-Llama-3.1-8B-Instruct-4bit \
-```
+---
 
-Or for one language in particular, chinese in this example
+**Melo TTS Handler**  
+- **language:** The language used for text-to-speech output.  
+- **device:** The device setting for TTS processing, with "auto" allowing automatic selection.  
+- **speaker_to_id:** An identifier mapping used to select the speaker profile.  
+- **ckpt_path:** The file path to the MELO model checkpoint. If empty, will use the standard checkpoint.
+- **config_path:** The file path to the MELO configuration file. If empty, will use the standard checkpoint.
 
-```bash
-python s2s_pipeline.py \
-    --local_mac_optimal_settings \
-    --device mps \
-    --stt_model_name large-v3 \
-    --language zh \
-    --mlx_lm_model_name mlx-community/Meta-Llama-3.1-8B-Instruct-4bit \
-```
+---
 
-## Command-line Usage
+### Debug Attribute description (debug_configuration.py) (also important!)
 
-> **_NOTE:_** References for all the CLI arguments can be found directly in the [arguments classes](https://github.com/huggingface/speech-to-speech/tree/d5e460721e578fef286c7b64e68ad6a57a25cf1b/arguments_classes) or by running `python s2s_pipeline.py -h`.
+---
 
-### Module level Parameters 
-See [ModuleArguments](https://github.com/huggingface/speech-to-speech/blob/d5e460721e578fef286c7b64e68ad6a57a25cf1b/arguments_classes/module_arguments.py) class. Allows to set:
-- a common `--device` (if one wants each part to run on the same device)
-- `--mode` `local` or `server`
-- chosen STT implementation 
-- chosen LM implementation
-- chose TTS implementation
-- logging level
+**DEBUG_LOGGING**  
+- **DEBUG_LOGGING:** Enables logging in wandb for debugging purposes.
 
-### VAD parameters
-See [VADHandlerArguments](https://github.com/huggingface/speech-to-speech/blob/d5e460721e578fef286c7b64e68ad6a57a25cf1b/arguments_classes/vad_arguments.py) class. Notably:
-- `--thresh`: Threshold value to trigger voice activity detection.
-- `--min_speech_ms`: Minimum duration of detected voice activity to be considered speech.
-- `--min_silence_ms`: Minimum length of silence intervals for segmenting speech, balancing sentence cutting and latency reduction.
+---
 
+**FLUSH_VAD**  
+- **FLUSH_VAD:** Time limit (in seconds) for continuous speech. If no silence is detected within this period, the pipeline proceeds with the current audio segment.
 
-### STT, LM and TTS parameters
+---
 
-`model_name`, `torch_dtype`, and `device` are exposed for each implementation of the Speech to Text, Language Model, and Text to Speech. Specify the targeted pipeline part with the corresponding prefix (e.g. `stt`, `lm` or `tts`, check the implementations' [arguments classes](https://github.com/huggingface/speech-to-speech/tree/d5e460721e578fef286c7b64e68ad6a57a25cf1b/arguments_classes) for more details).
+**USE_COMPLETION_LLM**  
+- **USE_COMPLETION_LLM:** A flag to enable using an additional language model that translates only complete sentences.
 
-For example:
-```bash
---lm_model_name google/gemma-2b-it
-```
+---
 
-### Generation parameters
+**INPUT_DEVICES**  
+- **INPUT_DEVICES:** Can be set to `None` or a tuple `(input, output)`. See the README for detailed configuration options.
 
-Other generation parameters of the model's generate method can be set using the part's prefix + `_gen_`, e.g., `--stt_gen_max_new_tokens 128`. These parameters can be added to the pipeline part's arguments class if not already exposed.
+---
+
+**OUTPUT_DEVICES**  
+- **OUTPUT_DEVICES:** Can be set to `None` or a tuple `(input, output)`. This setting is used with the sounddevice library.
+  - **Note:** We recommend installing an Audio Virtual Cable for offline testing. Without it, the application will always connect to the default microphone and main speaker. This setup is useful for tests such as those using the Europarl dataset.
+
+---
+
+**EUROPARL_PATH**  
+- **EUROPARL_PATH:** Specifies the file path to the Europarl dataset, which is used for offline testing.
+
+---
+
+## Additional Details:  
+
+This code uses the OpenAI API, specifically the GPT-4 mini model, for convenience due to the number of users. However, other services can also be used. In our case, we have tested **novita.ai**, which, using the same Python functionality, allows running the LLaMA 3.3 model. Currently, if you set the **OPENAI_API_KEY** as an environment variable, everything works seamlessly.
 
 ## Citations
 
@@ -245,17 +187,5 @@ Other generation parameters of the model's generate method can be set using the 
       eprint={2311.00430},
       archivePrefix={arXiv},
       primaryClass={cs.CL}
-}
-```
-
-### Parler-TTS
-```bibtex
-@misc{lacombe-etal-2024-parler-tts,
-  author = {Yoach Lacombe and Vaibhav Srivastav and Sanchit Gandhi},
-  title = {Parler-TTS},
-  year = {2024},
-  publisher = {GitHub},
-  journal = {GitHub repository},
-  howpublished = {\url{https://github.com/huggingface/parler-tts}}
 }
 ```
