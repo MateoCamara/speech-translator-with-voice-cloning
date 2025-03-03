@@ -49,7 +49,7 @@ pip install -r requirements.txt
 
 Install MeloTTS
 
-Follow the installation instructions provided in the MeloTTS repository. Ensure MeloTTS is installed within the same conda environment to maintain compatibility.
+Follow the installation instructions provided in the [MeloTTS repository](https://github.com/EliseWindbloom/MeloTTS-Windows). Ensure MeloTTS is installed within the same conda environment to maintain compatibility.
 
 ## Usage
 
@@ -164,6 +164,8 @@ This code uses the OpenAI API, specifically the GPT-4 mini model, for convenienc
 
 ## Citations
 
+The code is based on the fantastic repo [speech-to-speech](https://github.com/huggingface/speech-to-speech) by Hugging Face!
+
 ### Silero VAD
 ```bibtex
 @misc{Silero VAD,
@@ -187,5 +189,24 @@ This code uses the OpenAI API, specifically the GPT-4 mini model, for convenienc
       eprint={2311.00430},
       archivePrefix={arXiv},
       primaryClass={cs.CL}
+}
+```
+
+### Europarl
+```bibtex
+@inproceedings{iranzo-sanchez_europarl-st_2020,
+	title = {Europarl-{ST}: {A} {Multilingual} {Corpus} for {Speech} {Translation} of {Parliamentary} {Debates}},
+	shorttitle = {Europarl-{ST}},
+	url = {https://ieeexplore.ieee.org/document/9054626},
+	doi = {10.1109/ICASSP40776.2020.9054626},
+	abstract = {Current research into spoken language translation (SLT), or speech-to-text translation, is often hampered by the lack of specific data resources for this task, as currently available SLT datasets are restricted to a limited set of language pairs. In this paper we present Europarl-ST, a novel multilingual SLT corpus containing paired audio-text samples for SLT from and into 6 European languages, for a total of 30 different translation directions. This corpus has been compiled using the debates held in the European Parliament in the period between 2008 and 2012. This paper describes the corpus creation process and presents a series of automatic speech recognition, machine translation and spoken language translation experiments that highlight the potential of this new resource. The corpus is released under a Creative Commons license and is freely accessible and downloadable.},
+	urldate = {2025-02-27},
+	booktitle = {{ICASSP} 2020 - 2020 {IEEE} {International} {Conference} on {Acoustics}, {Speech} and {Signal} {Processing} ({ICASSP})},
+	author = {Iranzo-Sánchez, Javier and Silvestre-Cerdà, Joan Albert and Jorge, Javier and Roselló, Nahuel and Giménez, Adrià and Sanchis, Albert and Civera, Jorge and Juan, Alfons},
+	month = may,
+	year = {2020},
+	note = {ISSN: 2379-190X},
+	keywords = {Adaptation models, Europe, Filtering, Pipelines, Speech processing, Task analysis, Training, automatic speech recognition, machine translation, multilingual corpus, speech translation, spoken language translation},
+	pages = {8229--8233},
 }
 ```
