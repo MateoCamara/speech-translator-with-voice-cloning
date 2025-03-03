@@ -29,7 +29,7 @@ class WhisperSTTHandlerArguments:
         },
     )
     stt_gen_max_new_tokens: int = field(
-        default=128,
+        default=444,
         metadata={
             "help": "The maximum number of new tokens to generate. Default is 128."
         },
@@ -53,7 +53,7 @@ class WhisperSTTHandlerArguments:
         },
     )
     language: Optional[str] = field(
-        default='en',
+        default='es',
         metadata={
             "help": """The language for the conversation. 
             Choose between 'en' (english), 'fr' (french), 'es' (spanish), 
