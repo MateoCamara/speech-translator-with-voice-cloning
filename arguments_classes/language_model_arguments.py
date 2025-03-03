@@ -4,7 +4,7 @@ from dataclasses import dataclass, field
 @dataclass
 class LanguageModelHandlerArguments:
     lm_model_name: str = field(
-        default="HuggingFaceTB/SmolLM-360M-Instruct",
+        default="meta-llama/Llama-3.2-1B-instruct",
         metadata={
             "help": "The pretrained language model to use. Default is 'microsoft/Phi-3-mini-4k-instruct'."
         },
@@ -22,25 +22,25 @@ class LanguageModelHandlerArguments:
         },
     )
     user_role: str = field(
-        default="user",
+        default="user in english",
         metadata={
             "help": "Role assigned to the user in the chat context. Default is 'user'."
         },
     )
     init_chat_role: str = field(
-        default="system",
+        default="translator into spanish",
         metadata={
             "help": "Initial role for setting up the chat context. Default is 'system'."
         },
     )
     init_chat_prompt: str = field(
-        default="You are a helpful and friendly AI assistant. You are polite, respectful, and aim to provide concise responses of less than 20 words.",
+        default="You are a translation assistant. Translate exactly what I the user says in english into spanish. Just give the translation, only the translation. Do not add any extra information. If the user says something in spanish, just repeat what the user said.",
         metadata={
             "help": "The initial chat prompt to establish context for the language model. Default is 'You are a helpful AI assistant.'"
         },
     )
     lm_gen_max_new_tokens: int = field(
-        default=128,
+        default=444,
         metadata={
             "help": "Maximum number of new tokens to generate in a single completion. Default is 128."
         },

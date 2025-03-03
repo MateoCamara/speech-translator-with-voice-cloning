@@ -10,6 +10,8 @@ import nltk
 from rich.console import Console
 import wandb
 
+from debug_configuration import USE_COMPLETION_LLM
+
 # Initialize wandb project
 wandb.init(project="latency-tests", mode="online")
 
@@ -117,7 +119,10 @@ def build_pipeline(module_kwargs,
     from connections.local_audio_streamer import LocalAudioStreamer
     from VAD.vad_handler import VADHandler
     from STT.whisper_stt_handler import WhisperSTTHandler
-    from LLM.language_model import LanguageModelHandler
+    if USE_COMPLETION_LLM:
+        from LLM.language_model_with_completion import LanguageModelHandler
+    else:
+        from LLM.language_model import LanguageModelHandler
     from TTS.melo_handler import MeloTTSHandler
 
     # Local audio streamer for input/output
