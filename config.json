@@ -38,7 +38,7 @@
     "language": "es",
     "device": "auto",
     "speaker_to_id": "es",
-    "ckpt_path": "C:/Users/mateo/ownCloud/Carpeta Mateo-JoseLuis/07 MELO TTS/mateotts/G_1000.pth",
-    "config_path": "C:/Users/mateo/ownCloud/Carpeta Mateo-JoseLuis/07 MELO TTS/mateotts/config.json"
+    "ckpt_path": "",
+    "config_path": ""
   }
 }
