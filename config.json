@@ -1,0 +1,44 @@
+{
+  "module": {
+    "log_level": "info",
+    "mode": "local"
+  },
+  "vad_handler": {
+    "thresh": 0.3,
+    "sample_rate": 16000,
+    "min_silence_ms": 750,
+    "min_speech_ms": 500,
+    "max_speech_ms": 30000,
+    "speech_pad_ms": 250
+  },
+  "whisper_stt_handler": {
+    "model_name": "distil-whisper/distil-large-v3",
+    "device": "cuda",
+    "torch_dtype": "float16",
+    "gen_max_new_tokens": 444,
+    "gen_num_beams": 1,
+    "gen_return_timestamps": false,
+    "gen_task": "transcribe",
+    "language": "en"
+  },
+  "language_model_handler": {
+    "model_name": "meta-llama/Llama-3.2-1B-instruct",
+    "device": "cuda",
+    "torch_dtype": "float16",
+    "user_role": "user in english",
+    "init_chat_role": "translator in spanish",
+    "init_chat_prompt": "You are a translation assistant. Translate exactly what I the user says in english into spanish. Just give the translation, only the translation. Do not add any extra information. If the user says something in spanish, just repeat what the user said.",
+    "gen_max_new_tokens": 444,
+    "gen_min_new_tokens": 0,
+    "gen_temperature": 0,
+    "gen_do_sample": false,
+    "chat_size": 1
+  },
+  "melo_tts_handler": {
+    "language": "es",
+    "device": "auto",
+    "speaker_to_id": "es",
+    "ckpt_path": "C:/Users/mateo/ownCloud/Carpeta Mateo-JoseLuis/07 MELO TTS/mateotts/G_1000.pth",
+    "config_path": "C:/Users/mateo/ownCloud/Carpeta Mateo-JoseLuis/07 MELO TTS/mateotts/config.json"
+  }
+}

@@ -5,6 +5,8 @@ import numpy as np
 import time
 import logging
 
+from debug_configuration import INPUT_DEVICES
+
 logger = logging.getLogger(__name__)
 
 
@@ -23,13 +25,14 @@ class LocalAudioStreamer:
 
     def run(self):
         def callback(indata, outdata, frames, time, status):
-            if self.output_queue.empty():
-                self.input_queue.put(indata.copy())
-                outdata[:] = 0 * outdata
-            else:
+            self.input_queue.put(indata.copy())
+            if not self.output_queue.empty():
                 outdata[:] = self.output_queue.get()[:, np.newaxis]
+                # print("Hay datos en la cola")
 
         logger.debug("Available devices:")
+        if INPUT_DEVICES is not None:
+            sd.default.device = INPUT_DEVICES
         logger.debug(sd.query_devices())
         with sd.Stream(
             samplerate=16000,
