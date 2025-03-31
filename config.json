@@ -38,7 +38,7 @@
     "language": "es",
     "device": "auto",
     "speaker_to_id": "es",
-    "ckpt_path": "",
-    "config_path": ""
+    "ckpt_path": null,
+    "config_path": null
   }
 }

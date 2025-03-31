@@ -50,7 +50,7 @@ class MeloTTSHandler(BaseHandler):
         self.device = device
         self.language = language
         self.ckpt_path = ckpt_path
-        self.config_path = config_path or os.path.join(os.path.dirname(ckpt_path), "config.json")
+        self.config_path = config_path # or os.path.join(os.path.dirname(ckpt_path), "config.json")
         self.model = TTS(
             language=LANG_MAP[self.language],
             device=device,

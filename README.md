@@ -65,7 +65,7 @@ By default, the system uses the microphone as the audio input. However, you can 
 
 When the system is ready, it will display the message 'Ready!' (takes around 20 seconds). At this point, anything spoken into the microphone in English will be translated into Spanish and played back using a generic voice.
 
-To clone your voice, follow the instructions provided in the section below.
+To clone your voice, follow the instructions provided in [MeloTTS repository](https://github.com/EliseWindbloom/MeloTTS-Windows). Once you've got your model ready, include the path to it in config.json (ckpt_path and config_path). The system will then use your voice for the TTS module.
 
 ### Attribute description (config.json)
 
