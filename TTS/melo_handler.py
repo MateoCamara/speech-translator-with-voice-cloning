@@ -71,20 +71,10 @@ class MeloTTSHandler(BaseHandler):
         if llm_sentence is None:
             return np.zeros(self.blocksize, dtype=np.int16)
 
-        language_code = None
         if isinstance(llm_sentence, tuple):
             llm_sentence, language_code = llm_sentence
 
         console.print(f"[green]ASSISTANT: {llm_sentence}")
-
-        # Update model language if necessary
-        if language_code and self.language != language_code:
-            try:
-                self.model = TTS(language=LANG_MAP[language_code], device=self.device)
-                self.speaker_id = self.model.hps.data.spk2id[SPEAKER_MAP[language_code]]
-                self.language = language_code
-            except KeyError:
-                console.print(f"[red]Language {language_code} not supported. Using {self.language} instead.")
 
         if self.device == "mps":
             start = time.time()
