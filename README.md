@@ -162,6 +162,10 @@ To clone your voice, follow the instructions provided in [MeloTTS repository](ht
 
 This code uses the OpenAI API, specifically the GPT-4 mini model, for convenience due to the number of users. However, other services can also be used. In our case, we have tested **novita.ai**, which, using the same Python functionality, allows running the LLaMA 3.3 model. Currently, if you set the **OPENAI_API_KEY** as an environment variable, everything works seamlessly.
 
+## Zoom Integration
+
+To stream audio via Zoom or Bluetooth, we recommend installing **VB-Audio Virtual Cable**. This tool lets you route the audio output from your speakers directly into your video conferencing session, or vice versa, capturing audio from the conferencing session, translating it, and automatically sending it to your speakers. After installing, update the `debug_configurations` file accordingly by adjusting `INPUT_DEVICES` and `OUTPUT_DEVICES` to ensure proper audio routing. These instructions apply specifically to Windows systems.
+
 ## Citations
 
 The code is based on the fantastic repo [speech-to-speech](https://github.com/huggingface/speech-to-speech) by Hugging Face!
