@@ -1,7 +1,7 @@
 import time
 
 import torch
-import wandb
+# import wandb
 
 from debug_configuration import DEBUG_LOGGING, FLUSH_VAD
 
@@ -76,8 +76,8 @@ class VADIterator:
         speech_prob = self.model(x, self.sampling_rate).item()
         end_time = time.time()
         latency = end_time - start_time
-        if DEBUG_LOGGING:
-            wandb.log({"VAD_latency": latency})
+        # if DEBUG_LOGGING:
+        #     wandb.log({"VAD_latency": latency})
 
         # Update last_speech_sample if speech is detected.
         if speech_prob >= self.threshold:

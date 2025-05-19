@@ -2,7 +2,7 @@ import os
 import time
 import logging
 
-import wandb
+# import wandb
 import torch
 import numpy as np
 import librosa
@@ -86,8 +86,8 @@ class MeloTTSHandler(BaseHandler):
             start_time = time.time()
             audio_chunk = self.model.tts_to_file(llm_sentence, self.speaker_id, quiet=True)
             latency = time.time() - start_time
-            if DEBUG_LOGGING:
-                wandb.log({"Melo_latency": latency})
+            # if DEBUG_LOGGING:
+            #     wandb.log({"Melo_latency": latency})
         except (AssertionError, RuntimeError) as e:
             logger.error(f"Error in MeloTTSHandler: {e}")
             audio_chunk = np.array([])

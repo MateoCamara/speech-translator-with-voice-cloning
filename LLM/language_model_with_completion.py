@@ -3,7 +3,7 @@ import time
 import logging
 import torch
 
-import wandb
+# import wandb
 from openai import OpenAI
 from baseHandler import BaseHandler
 from rich.console import Console
@@ -195,8 +195,8 @@ class LanguageModelHandler(BaseHandler):
             incomplete_text = response_json.get('incomplete_text', '').strip()
             end_time = time.time()
             latency = end_time - start_time
-            if DEBUG_LOGGING:
-                wandb.log({"LLM_validation_latency": latency})
+            # if DEBUG_LOGGING:
+            #     wandb.log({"LLM_validation_latency": latency})
             return complete_sentences, incomplete_text
         except Exception as e:
             logger.error("Error during sentence validation: %s", str(e))
@@ -255,7 +255,7 @@ class LanguageModelHandler(BaseHandler):
             end_time = time.time()
             latency = end_time - start_time
             if DEBUG_LOGGING:
-                wandb.log({"LLM_translation_latency": latency})
+                # wandb.log({"LLM_translation_latency": latency})
 
                 with open("./tests/latency/translation_with_uncompleted_sentences.txt", "a", encoding="utf-8") as archivo:
                     archivo.write(" " + translated_text)

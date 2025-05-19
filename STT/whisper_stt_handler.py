@@ -1,7 +1,7 @@
 import time
 import logging
 import torch
-import wandb
+# import wandb
 from transformers import AutoProcessor, AutoModelForSpeechSeq2Seq
 from baseHandler import BaseHandler
 from rich.console import Console
@@ -102,7 +102,7 @@ class WhisperSTTHandler(BaseHandler):
         latency = time.time() - start_time
 
         if DEBUG_LOGGING:
-            wandb.log({"Whisper_latency": latency})
+            # wandb.log({"Whisper_latency": latency})
             with open("./tests/latency/whisper_pred.txt", "a", encoding="utf-8") as f:
                 f.write(" " + pred_text)
 

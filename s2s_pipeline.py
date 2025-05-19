@@ -8,12 +8,12 @@ from threading import Event
 import torch
 import nltk
 from rich.console import Console
-import wandb
+# import wandb
 
 from debug_configuration import USE_COMPLETION_LLM
 
 # Initialize wandb project
-wandb.init(project="latency-tests", mode="online")
+# wandb.init(project="latency-tests", mode="online")
 
 # Ensure necessary NLTK resources are available
 try:

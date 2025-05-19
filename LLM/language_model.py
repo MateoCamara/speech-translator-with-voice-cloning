@@ -3,7 +3,7 @@ import time
 import logging
 import torch
 
-import wandb
+# import wandb
 from openai import OpenAI
 from baseHandler import BaseHandler
 from rich.console import Console
@@ -128,7 +128,7 @@ class LanguageModelHandler(BaseHandler):
             end_time = time.time()
             latency = end_time - start_time
             if DEBUG_LOGGING:
-                wandb.log({"LLM_translation_latency": latency})
+                # wandb.log({"LLM_translation_latency": latency})
 
                 with open("./tests/latency/translation.txt", "a", encoding="utf-8") as archivo:
                     archivo.write(" " + translated_text)
