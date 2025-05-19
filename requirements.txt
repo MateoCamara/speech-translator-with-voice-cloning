@@ -7,3 +7,4 @@ modelscope>=1.17.1
 openai>=1.40.1
 transformers
 librosa
+rich
